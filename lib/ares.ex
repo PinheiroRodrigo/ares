@@ -68,7 +68,7 @@ defmodule Ares do
   ## Examples
 
       iex> Ares.go(Ares.Post, "posts", [{:title, :string}])
-      # MyPost is now just like any other Schema module in Phoenix.
+      # Post is now just like any other Schema module in Phoenix.
       # IO.inspect MyApp.Repo.all(MyPost)
 
   """
@@ -81,39 +81,3 @@ defmodule Ares do
   end
 
 end
-
-# Ecto.Migrator.run(repo, Ecto.Migrator.migrations_path(repo), direction, opts)
-
-
-### PLAN ###
-## schemaless (query example down below)
-#  [%{id: id}] = Ares.Repo.insert_all "posts", [[title: "hello"]], returning: [:id]
-#  post = from p in "posts", where: p.id == ^id
-#  {1, _} = MyApp.Repo.update_all post, set: [title: "new title"]
-#  {1, _} = MyApp.Repo.delete_all post
-
-## create migration module using macros ## GL macroying this
-# use Ecto.Migration
-#   create_if_not_exists table("version") do end
-#   alter table("posts") do
-#     add :parameter, :type
-#     modify, remove...
-#   end
-
-## use migrator to run the migration ##
-# Ecto.Migrator.run(Ares.Repo, :up or :down, :all)
-
-# Mix.Task.run "ecto.drop", []
-
-
-# query example
-# import Ecto.Query
-# MyApp.Repo.all(
-#   from u in "users",
-#   join: a in "activities",
-#   on: a.user_id == u.id,
-#   where: a.start_at > type(^start_at, Ecto.DateTime) and
-#          a.end_at < type(^end_at, Ecto.DateTime),
-#   group_by: a.user_id,
-#   select: %{user_id: a.user_id, interval: a.start_at - a.end_at, count: count(u.id)}
-# )
